@@ -1,0 +1,12 @@
+-cp src
+-debug
+--each
+
+--next
+-js brave.js
+-main Service
+-lib hxnodejs-serialport
+
+--next
+-js web/brave.js
+-main BrainWaveViewer
