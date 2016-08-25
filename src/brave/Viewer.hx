@@ -81,25 +81,16 @@ class Viewer {
 		return data;
 	}
 
-	static function drawData( data : Array<Array<Int>> ) {
-
-		var sw = canvas.width / data[0].length;
-
-		//for( i in 0...data.length ) {
-		for( i in 2...4 ) {
-
-			var values = data[i];
-
-			ctx.strokeStyle = COLORS[i];
-			ctx.beginPath();
-			ctx.moveTo(0,0);
-			for( j in 0...values.length ) {
-				var v = values[j];
-				ctx.lineTo( j*sw, v );
-			}
-			//ctx.closePath();
-			ctx.stroke();
+	static function drawWave( data : Array<Int>, color : String ) {
+		var sw = canvas.width / data.length;
+		ctx.strokeStyle = color;
+		ctx.beginPath();
+		ctx.moveTo(0,0);
+		for( i in 0...data.length ) {
+			ctx.lineTo( i*sw, data[i] );
 		}
+		//ctx.closePath();
+		ctx.stroke();
 	}
 
 	static function main() {
@@ -118,9 +109,14 @@ class Viewer {
 			loadData( file, function(e,dump){
 				if( e != null ) trace(e) else {
 					var data = parseData( dump );
-					drawData( data );
+					//for( i in 0...data.length ) {
+					for( i in 2...4 ) {
+						var v = data[i];
+						drawWave( v, COLORS[i] );
+					}
 				}
 			});
 		}
 	}
+
 }
