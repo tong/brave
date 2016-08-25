@@ -2,6 +2,8 @@ package brave;
 
 import js.Browser.document;
 import js.Browser.window;
+import js.html.CanvasElement;
+import js.html.CanvasRenderingContext2D;
 
 /**
 	0: signal,
@@ -39,7 +41,21 @@ class Viewer {
 		'#8C4A91'
 	];
 
-	static function draw( dump : String ) {
+	static var canvas : CanvasElement;
+	static var ctx : CanvasRenderingContext2D;
+
+	static function loadData( path : String, callback : String->String->Void ) {
+		var http = new haxe.Http( path );
+		http.onData = function(dump) {
+			callback( null, dump );
+		}
+		http.onError = function(error) {
+			callback( error, null );
+		}
+		http.request();
+	}
+
+	static function parseData( dump : String ) : Array<Array<Int>> {
 
 		var data = [for(i in 0...11)[]];
 
@@ -52,6 +68,7 @@ class Viewer {
 			}
 		}
 
+		/*
 		var maxValues = [for(i in 0...data.length) 0 ];
 		for( i in 0...data.length ) {
 			for( j in 0...data[i].length ) {
@@ -59,19 +76,12 @@ class Viewer {
 				if( v > maxValues[i] ) maxValues[i] = v;
 			}
 		}
+		*/
 
-		var canvas = document.createCanvasElement();
-		canvas.width = window.innerWidth;
-		canvas.height = window.innerHeight;
-		document.body.appendChild( canvas );
+		return data;
+	}
 
-		var ctx = canvas.getContext2d();
-		ctx.lineWidth = 1;
-
-		var timeStart = data[0][0];
-		var timeEnd = data[0][data[0].length-1];
-		var timeTotal = timeEnd - timeStart;
-		//trace(timeTotal);
+	static function drawData( data : Array<Array<Int>> ) {
 
 		var sw = canvas.width / data[0].length;
 
@@ -93,13 +103,24 @@ class Viewer {
 	}
 
 	static function main() {
+
 		window.onload = function() {
-			var dumpFile = '../brain.dump';
-			var http = new haxe.Http( dumpFile );
-			http.onData = function(dump) {
-				draw( dump );
-			}
-			http.request();
+
+			canvas = document.createCanvasElement();
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+			document.body.appendChild( canvas );
+
+			ctx = canvas.getContext2d();
+			ctx.lineWidth = 1;
+
+			var file = '../brain.dump';
+			loadData( file, function(e,dump){
+				if( e != null ) trace(e) else {
+					var data = parseData( dump );
+					drawData( data );
+				}
+			});
 		}
 	}
 }
