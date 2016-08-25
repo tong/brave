@@ -1,3 +1,4 @@
+package brave;
 
 import js.node.Buffer;
 import js.npm.SerialPort;

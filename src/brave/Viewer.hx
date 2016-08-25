@@ -1,3 +1,4 @@
+package brave;
 
 import js.Browser.document;
 import js.Browser.window;
@@ -17,7 +18,7 @@ import js.Browser.window;
 	9: low gamma,
 	10: high gamma
 */
-class BrainWaveViewer {
+class Viewer {
 
 	static var COLORS = [
 

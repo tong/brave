@@ -4,9 +4,9 @@
 
 --next
 -js brave.js
--main Service
+-main brave.Service
 -lib hxnodejs-serialport
 
 --next
 -js web/brave.js
--main BrainWaveViewer
+-main brave.Viewer
